@@ -3,10 +3,10 @@ const debug = require("debug")("vlcSinGluten:server:initServer");
 const chalk = require("chalk");
 const app = require(".");
 
-const initServer = (port) => {
+const initServer = async (port) => {
   let initServerPromise = null;
   try {
-    initServerPromise = new Promise((resolve, reject) => {
+    initServerPromise = await new Promise((resolve, reject) => {
       const server = app.listen(port, () => {
         debug(
           chalk.greenBright(`Server listening on http://localhost:${port}`)

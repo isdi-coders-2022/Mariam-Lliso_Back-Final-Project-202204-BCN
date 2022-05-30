@@ -1,0 +1,51 @@
+{
+  "name": "mariam-lliso_back-final-project-202204-bcn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src",
+    "start-dev": "nodemon src -q",
+    "test": "jest --watchAll=false",
+    "test-coverage": "npm run test -- --coverage --watchAll=false"
+  },
+  "test": "jest",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.16"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js",
+      "!src/server/initializeServer.js",
+      "!src/server/index.js",
+      "!src/database/index.js",
+      "!.eslintrc.js"
+    ]
+  },
+  "dependencies": {
+    "@types/jest": "^27.5.1",
+    "bcrypt": "^5.0.1",
+    "chalk": "^4.1.2",
+    "commander": "^9.2.0",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validation": "^4.1.0",
+    "helmet": "^5.1.0",
+    "jest": "^28.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb-memory-server": "^8.6.0",
+    "mongoose": "^6.3.4",
+    "morgan": "^1.10.0",
+    "supertest": "^6.2.3"
+  }
+}

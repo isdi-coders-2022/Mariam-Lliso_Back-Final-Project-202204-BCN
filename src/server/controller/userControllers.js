@@ -2,10 +2,11 @@ const bcrypt = require("bcrypt");
 const debug = require("debug")("vlcSinGluten:server:controller:users");
 const chalk = require("chalk");
 const User = require("../../database/models/User");
+const UserRol = require("../../database/models/UserRol");
 
 const userRegister = async (req, res, next) => {
   try {
-    const { name, username, password } = req.body;
+    const { name, surnames, username, password, userRol } = req.body;
     const queryFind = { username };
     const user = await User.findOne(queryFind);
 
@@ -20,10 +21,17 @@ const userRegister = async (req, res, next) => {
 
     const encryptPassword = await bcrypt.hash(password, 10);
 
+    const queryFindUserRol = {
+      code: userRol,
+    };
+    const rol = await UserRol.findOne(queryFindUserRol);
+
     const queryCreate = {
+      name,
+      surnames,
       username,
       password: encryptPassword,
-      name,
+      userRol: rol,
     };
 
     await User.create(queryCreate);

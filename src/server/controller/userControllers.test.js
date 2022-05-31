@@ -1,5 +1,6 @@
 const User = require("../../database/models/User");
-const { mockUser } = require("../mocks/mocksUsers");
+const UserRol = require("../../database/models/UserRol");
+const { mockUser, mockRol } = require("../mocks/mocksUsers");
 const userRegister = require("./userControllers");
 
 const res = {
@@ -26,6 +27,7 @@ describe("Given a userRegister function", () => {
 
       User.findOne = jest.fn().mockResolvedValue(false);
       User.create = jest.fn().mockResolvedValue(mockUser);
+      UserRol.findOne = jest.fn().mockResolvedValue(mockRol);
 
       await userRegister(req, res, null);
 

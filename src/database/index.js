@@ -3,9 +3,7 @@ const mongoose = require("mongoose");
 const debug = require("debug")("vlcSinGluten:connection-database");
 const chalk = require("chalk");
 
-const connectionToDatabase = async ({ username, password, database }) => {
-  const connectionDBString = `mongodb+srv://${username}:${password}@valenciasinglutencluste.krt0mtb.mongodb.net/${database}`;
-
+const connectionToDatabase = async (connectionDBString) => {
   let connectionPromise = null;
 
   try {

@@ -3,30 +3,26 @@ const { Schema, model } = require("mongoose");
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    require: true,
   },
   surnames: {
     type: String,
-    required: true,
+    default: "",
   },
   username: {
     type: String,
-    required: true,
+    require: true,
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    require: true,
   },
-  avatar: {
-    type: String,
+  userRol: {
+    type: Schema.Types.ObjectId,
+    ref: "UserRol",
+    require: true,
   },
-  userRol: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "UserRol",
-    },
-  ],
 });
 
 const User = model("User", UserSchema, "users");

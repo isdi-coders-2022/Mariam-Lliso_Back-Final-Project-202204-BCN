@@ -3,6 +3,7 @@ const { default: helmet } = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 const { errorNotFound, generalServerError } = require("./middlewares/errors");
+const userRouter = require("./routers/userRouters/userRouters");
 
 const corsOptions = {
   origin: [
@@ -23,6 +24,8 @@ app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(helmet());
+
+app.use("/user", userRouter);
 
 app.use(errorNotFound);
 app.use(generalServerError);

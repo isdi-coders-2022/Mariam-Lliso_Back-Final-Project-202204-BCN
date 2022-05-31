@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const UserRol = require("./UserRol");
 
 const UserSchema = new Schema({
   name: {
@@ -24,7 +25,7 @@ const UserSchema = new Schema({
   userRol: [
     {
       type: Schema.Types.ObjectId,
-      ref: "UserRol",
+      ref: UserRol,
     },
   ],
 });

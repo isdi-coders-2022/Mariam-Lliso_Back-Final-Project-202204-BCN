@@ -5,6 +5,10 @@ const UserSchema = new Schema({
     type: String,
     require: true,
   },
+  surnames: {
+    type: String,
+    default: "",
+  },
   username: {
     type: String,
     require: true,
@@ -14,7 +18,13 @@ const UserSchema = new Schema({
     type: String,
     require: true,
   },
+  userRol: {
+    type: Schema.Types.ObjectId,
+    ref: "UserRol",
+    require: true,
+  },
 });
 
 const User = model("User", UserSchema, "users");
+
 module.exports = User;

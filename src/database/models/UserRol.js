@@ -11,6 +11,6 @@ const UserRolSchema = new Schema({
   },
 });
 
-const UserRol = model("UserRol", UserRolSchema, "userrols");
+const UserRol = model("Userrol", UserRolSchema, "userrols");
 
 module.exports = UserRol;

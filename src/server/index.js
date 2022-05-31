@@ -2,6 +2,7 @@ const express = require("express");
 const { default: helmet } = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
+const { errorNotFound, generalServerError } = require("./middlewares/errors");
 
 const corsOptions = {
   origin: [
@@ -22,5 +23,8 @@ app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(helmet());
+
+app.use(errorNotFound);
+app.use(generalServerError);
 
 module.exports = app;

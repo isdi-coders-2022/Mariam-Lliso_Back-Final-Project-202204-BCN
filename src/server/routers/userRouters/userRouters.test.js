@@ -7,6 +7,7 @@ const connectDatabase = require("../../../database");
 
 const User = require("../../../database/models/User");
 const { newMockUser } = require("../../mocks/mocksUsers");
+const { rolUser } = require("../../../database/utils/userRols");
 
 let mongoServer;
 
@@ -34,8 +35,10 @@ describe("Given a POST 'user/register' endpoint", () => {
       const expectedMessage = "User created";
       const newUser = {
         name: "johndoe",
+        surnames: "y sus monyecos",
         username: "johndoe",
         password: "johndoe",
+        userRol: rolUser,
       };
 
       const { body } = await request(app)

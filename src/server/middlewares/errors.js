@@ -1,24 +1,18 @@
 require("dotenv").config();
 const debug = require("debug")("vlcSinGluten:server:middlewares:errors");
 const chalk = require("chalk");
-const customError = require("../../utils/customError");
 
-const notFoundError = (req, res, next) => {
-  const error = customError(404, "Endpoint not found");
-
-  next(error);
+const errorNotFound = (req, res) => {
+  res.status(404).json({ msg: "Endpoint not found" });
+  debug(chalk.redBright(`A request did not find the endpoint requested`));
 };
 
 // eslint-disable-next-line no-unused-vars
-const generalError = (error, req, res, next) => {
-  debug(chalk.red(error.message || error.customMessage));
-  const message = error.customMessage ?? "General Error";
+const generalServerError = (error, req, res, next) => {
   const statusCode = error.statusCode ?? 500;
-
-  res.status(statusCode).json({ error: true, message });
+  const errorMessage = error.message ?? "General server error";
+  res.status(statusCode).json(errorMessage);
+  debug(chalk.redBright(error.message ?? "General server error"));
 };
 
-module.exports = {
-  notFoundError,
-  generalError,
-};
+module.exports = { errorNotFound, generalServerError };

@@ -3,43 +3,39 @@ const debug = require("debug")("vlcSinGluten:server:controller:users");
 const chalk = require("chalk");
 const User = require("../../database/models/User");
 
-const registerUser = async (req, res, next) => {
+const userRegister = async (req, res, next) => {
   try {
-    const { name, surnames, username, password, avatar, rol, favorites } =
-      req.body;
+    const { name, username, password } = req.body;
+    const queryFind = { username };
+    const user = await User.findOne(queryFind);
 
-    const user = await User.findOne({ username });
+    if (user) {
+      const customError = new Error("User already exists");
+      customError.statusCode = 409;
 
-    if (!user) {
-      const encryptedPassword = await bcrypt.hash(password, 10);
+      next(customError);
 
-      const newUser = {
-        name,
-        surnames,
-        username,
-        password: encryptedPassword,
-        avatar,
-        rol,
-        favorites,
-      };
-
-      await User.create(newUser);
-
-      res.status(201).json({ msg: "New user created succesfully" });
-    } else {
-      const userError = new Error();
-      userError.customMessage = "Username already exists";
-      userError.statusCode = 409;
-      next(userError);
-      debug(
-        chalk.redBright(
-          "An attempt to register an user has failed: User already exists"
-        )
-      );
+      return;
     }
+
+    const encryptPassword = await bcrypt.hash(password, 10);
+
+    const queryCreate = {
+      username,
+      password: encryptPassword,
+      name,
+    };
+
+    await User.create(queryCreate);
+
+    debug(chalk.green("User created"));
+    res.status(201).json({ msg: "User created" });
   } catch (error) {
+    error.statusCode = 400;
+    debug(chalk.red("Bad request"));
+    error.message = "Bad request";
     next(error);
   }
 };
 
-module.exports = { registerUser };
+module.exports = userRegister;

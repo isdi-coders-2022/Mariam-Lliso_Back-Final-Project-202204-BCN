@@ -1,65 +1,65 @@
 const User = require("../../database/models/User");
-const { registerUser } = require("./userControllers");
+const { mockUser } = require("../mocks/mocksUsers");
+const userRegister = require("./userControllers");
 
-describe("Given a registerUser controller", () => {
-  describe("When its called with a inexistent username: name, 'Marta', username 'Marta' and a password '1234'", () => {
-    test("Then it should call the responses method json with a 201, and the method json with the message 'New user created succesfully'", async () => {
-      User.findOne = jest.fn().mockReturnValue(false);
-      User.create = jest.fn().mockResolvedValue(true);
+const res = {
+  status: jest.fn().mockReturnThis(),
+  json: jest.fn(),
+};
+
+jest.mock("bcrypt", () => ({
+  hash: jest.fn().mockResolvedValue(() => "mockPasswordEncrypted"),
+}));
+
+const next = jest.fn();
+
+describe("Given a userRegister function", () => {
+  describe("When it's called with a new name, username and password", () => {
+    test("Then it should call the response method status with 201 and it's json method with the message 'User created'", async () => {
+      const expectedMessage = { msg: "User created" };
+
+      const req = {
+        body: mockUser,
+      };
 
       const expectedStatus = 201;
-      const expectedMessage = { msg: "New user created succesfully" };
-      const req = {
-        body: {
-          name: "Marta",
-          username: "Marta",
-          password: "1234",
-        },
-      };
-      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-      const next = jest.fn();
+      User.findOne = jest.fn().mockResolvedValue(false);
+      User.create = jest.fn().mockResolvedValue(mockUser);
 
-      await registerUser(req, res, next);
+      await userRegister(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
       expect(res.json).toHaveBeenCalledWith(expectedMessage);
     });
   });
 
-  describe("When its called with a existent username: name, 'Marta', username 'Marta' and a password '1234'", () => {
-    test("Then it should call the next function with an error", async () => {
-      User.findOne = jest.fn().mockReturnValue(true);
-
+  describe("When it's called with an existing username", () => {
+    test("Then it should call next with an error", async () => {
+      const expectedError = new Error("User already exists");
       const req = {
-        body: {
-          name: "Marta",
-          username: "Marta",
-          password: "1234",
-        },
+        body: mockUser,
       };
-      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-      const next = jest.fn();
-      const errorExpected = new Error();
+      User.findOne = jest.fn().mockResolvedValue(true);
 
-      await registerUser(req, res, next);
+      await userRegister(req, null, next);
 
-      expect(next).toHaveBeenCalledWith(errorExpected);
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 
-  describe("When its called with an inexistent request body", () => {
-    test("Then it should call the next function with an error", async () => {
-      const errorExpected = new Error();
-      User.findOne = jest.fn().mockReturnValue(errorExpected);
+  describe("When it's invoked an a error occurs", () => {
+    test("Then it should call next with an error", async () => {
+      const expectedError = new Error("Bad request");
+      const req = {
+        body: mockUser,
+      };
 
-      const req = {};
-      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-      const next = jest.fn();
+      User.findOne = jest.fn().mockRejectedValue(expectedError);
 
-      await registerUser(req, res, next);
+      await userRegister(req, null, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

@@ -1,35 +1,20 @@
 const { Schema, model } = require("mongoose");
-const UserRol = require("./UserRol");
 
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
-  },
-  surnames: {
-    type: String,
-    required: true,
+    require: true,
   },
   username: {
     type: String,
-    required: true,
+    require: true,
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    require: true,
   },
-  avatar: {
-    type: String,
-  },
-  userRol: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: UserRol,
-    },
-  ],
 });
 
 const User = model("User", UserSchema, "users");
-
 module.exports = User;

@@ -59,7 +59,7 @@ describe("Given a generalServerError function", () => {
         message: "User unauthorized",
       };
       const expectedStatus = 401;
-      const expectedMessage = "User unauthorized";
+      const expectedMessage = { msg: "User unauthorized" };
 
       generalServerError(error, null, res);
 

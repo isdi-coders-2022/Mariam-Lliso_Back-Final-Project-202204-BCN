@@ -11,7 +11,7 @@ const errorNotFound = (req, res) => {
 const generalServerError = (error, req, res, next) => {
   const statusCode = error.statusCode ?? 500;
   const errorMessage = error.message ?? "General server error";
-  res.status(statusCode).json(errorMessage);
+  res.status(statusCode).json({ msg: errorMessage });
   debug(chalk.redBright(error.message ?? "General server error"));
 };
 

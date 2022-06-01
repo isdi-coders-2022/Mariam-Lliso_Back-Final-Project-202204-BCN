@@ -59,7 +59,7 @@ describe("Given a POST 'user/register' endpoint", () => {
         .send(newMockUser)
         .expect(409);
 
-      expect(body).toBe(expectedMessage);
+      expect(body.msg).toBe(expectedMessage);
     });
   });
 
@@ -72,7 +72,7 @@ describe("Given a POST 'user/register' endpoint", () => {
         .send({})
         .expect(400);
 
-      expect(body).toBe(expectedMessage);
+      expect(body.msg).toBe(expectedMessage);
     });
   });
 });

@@ -7,9 +7,9 @@ const userRegisterCredentials = {
       .messages({ message: "A name is Required" })
       .required(),
     surnames: Joi.string()
+      .allow("")
       .max(30)
-      .messages({ message: "A surnames is Required" })
-      .optional(),
+      .messages({ message: "Surname max leght is 30 chars" }),
     username: Joi.string()
       .max(20)
       .messages({ message: "A username is Required" })

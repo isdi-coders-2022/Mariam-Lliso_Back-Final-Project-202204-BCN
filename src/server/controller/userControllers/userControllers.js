@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 const debug = require("debug")("vlcSinGluten:server:controller:users");
 const chalk = require("chalk");
-const User = require("../../database/models/User");
-const UserRol = require("../../database/models/UserRol");
+const User = require("../../../database/models/User");
+const UserRol = require("../../../database/models/UserRol");
 
 const userRegister = async (req, res, next) => {
   try {

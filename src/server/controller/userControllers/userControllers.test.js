@@ -1,6 +1,6 @@
-const User = require("../../database/models/User");
-const UserRol = require("../../database/models/UserRol");
-const { mockUser, mockRol } = require("../mocks/mocksUsers");
+const User = require("../../../database/models/User");
+const UserRol = require("../../../database/models/UserRol");
+const { mockUser, mockRol } = require("../../mocks/mocksUsers");
 const userRegister = require("./userControllers");
 
 const res = {

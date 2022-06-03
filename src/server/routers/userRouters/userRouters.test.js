@@ -1,4 +1,5 @@
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 const request = require("supertest");
@@ -6,7 +7,11 @@ const app = require("../../index");
 const connectDatabase = require("../../../database");
 
 const User = require("../../../database/models/User");
-const { newMockUser } = require("../../mocks/mocksUsers");
+const {
+  newMockUser,
+  mockUserCredentials,
+  mockToken,
+} = require("../../mocks/mocksUsers");
 const { rolUser } = require("../../../database/utils/userRols");
 
 let mongoServer;
@@ -16,17 +21,17 @@ beforeAll(async () => {
   await connectDatabase(mongoServer.getUri());
 });
 
+afterAll(async () => {
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});
+
 beforeEach(async () => {
   await request(app).post("/user/register").send(newMockUser).expect(201);
 });
 
 afterEach(async () => {
   await User.deleteMany({});
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-  await mongoServer.stop();
 });
 
 describe("Given a POST 'user/register' endpoint", () => {
@@ -73,6 +78,21 @@ describe("Given a POST 'user/register' endpoint", () => {
         .expect(400);
 
       expect(body.msg).toBe(expectedMessage);
+    });
+  });
+});
+
+describe("Given a POST /user/login endpoint", () => {
+  describe("When it receives a request with a registered user", () => {
+    test("Then it should respond with a 200 status and a token", async () => {
+      jwt.sign = jest.fn().mockReturnValue(mockToken);
+
+      const { body } = await request(app)
+        .post("/user/login")
+        .send(mockUserCredentials)
+        .expect(200);
+
+      expect(body.token).not.toBeNull();
     });
   });
 });

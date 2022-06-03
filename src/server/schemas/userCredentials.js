@@ -1,6 +1,6 @@
 const { Joi } = require("express-validation");
 
-const userRegisterCredentials = {
+const userRegisterCredentialsSchema = {
   body: Joi.object({
     name: Joi.string()
       .max(30)
@@ -11,7 +11,7 @@ const userRegisterCredentials = {
       .max(30)
       .messages({ message: "Surname max leght is 30 chars" }),
     username: Joi.string()
-      .max(20)
+      .max(30)
       .messages({ message: "A username is Required" })
       .required(),
     password: Joi.string()
@@ -26,4 +26,15 @@ const userRegisterCredentials = {
   }),
 };
 
-module.exports = userRegisterCredentials;
+const userLoginCredentialsSchema = {
+  body: Joi.object({
+    username: Joi.string()
+      .messages({ message: "A Username is Required" })
+      .required(),
+    password: Joi.string()
+      .messages({ message: "A Password is Required" })
+      .required(),
+  }),
+};
+
+module.exports = { userRegisterCredentialsSchema, userLoginCredentialsSchema };

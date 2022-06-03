@@ -1,16 +1,29 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const User = require("../../../database/models/User");
 const UserRol = require("../../../database/models/UserRol");
-const { mockUser, mockRol } = require("../../mocks/mocksUsers");
-const userRegister = require("./userControllers");
+const {
+  mockUser,
+  mockRol,
+  mockUserCredentials,
+  mockToken,
+  mockBadUser,
+} = require("../../mocks/mocksUsers");
+const { userRegister, userLogin } = require("./userControllers");
+
+jest.mock("../../../database/models/User", () => ({
+  findOne: jest.fn().mockResolvedValue(() => mockUserCredentials),
+}));
+
+jest.mock("bcrypt", () => ({
+  compare: jest.fn().mockResolvedValue(() => true),
+  hash: jest.fn().mockResolvedValue(() => "mockPasswordEncrypted"),
+}));
 
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
 };
-
-jest.mock("bcrypt", () => ({
-  hash: jest.fn().mockResolvedValue(() => "mockPasswordEncrypted"),
-}));
 
 const next = jest.fn();
 
@@ -52,16 +65,90 @@ describe("Given a userRegister function", () => {
 
   describe("When it's invoked an a error occurs", () => {
     test("Then it should call next with an error", async () => {
-      const expectedError = new Error("Bad request");
       const req = {
-        body: mockUser,
+        body: mockBadUser,
       };
+      const expectedError = new Error("Bad request");
 
-      User.findOne = jest.fn().mockRejectedValue(expectedError);
+      User.findOne = jest.fn().mockResolvedValue(false);
 
       await userRegister(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given userLogin function", () => {
+  describe("When it's called with correct user credentials", () => {
+    jwt.sign = jest.fn().mockReturnValue(mockToken);
+
+    test("Then it should call response method status with 200 and method json with a token", async () => {
+      // Arrange
+      const req = {
+        body: {
+          id: 1,
+          username: "username",
+          password: "password",
+        },
+      };
+
+      const expectedStatus = 200;
+
+      User.findOne = jest.fn().mockResolvedValue(true);
+
+      // Act
+      await userLogin(req, res, null);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith({ token: mockToken });
+    });
+  });
+
+  describe("When it's called with incorrect username", () => {
+    test("Then it should call next method with 'Username or password are worng'", async () => {
+      // Arrange
+      User.findOne = jest.fn().mockResolvedValue(false);
+
+      const req = {
+        body: {
+          id: 1,
+          username: "menganito",
+          password: "password",
+        },
+      };
+
+      const expectErrorMessage = new Error("Username or password are worng");
+
+      // Act
+      await userLogin(req, null, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+
+  describe("When it's called with incorrect password", () => {
+    test("Then it should call next method with 'Username or password are worng'", async () => {
+      // Arrange
+      bcrypt.compare = jest.fn().mockResolvedValue(false);
+
+      const req = {
+        body: {
+          id: 1,
+          username: "username",
+          password: "incorrectPassword",
+        },
+      };
+
+      const expectErrorMessage = new Error("Username or password are worng");
+
+      // Act
+      await userRegister(req, null, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
     });
   });
 });

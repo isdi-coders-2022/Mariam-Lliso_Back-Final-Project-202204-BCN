@@ -18,12 +18,15 @@ const mockUsers = [
 ];
 
 const mockUser = {
-  id: "6287dcfafc0614bd47bc9c4a",
   name: "Mario",
   surnames: "lgggg",
   username: "marioLG",
   password: "CA32A1E4F9CB46B6D99FC627F9EB4AC606BC3474",
   userRol: rolUser,
+};
+
+const mockBadUser = {
+  mane: "Evil Mario",
 };
 
 const newMockUser = {
@@ -37,4 +40,20 @@ const mockRol = {
   id: "6295c9304bab9e5540ff8fc8",
 };
 
-module.exports = { mockUsers, mockUser, newMockUser, mockRol };
+const mockToken = "";
+
+const mockUserCredentials = {
+  id: 1,
+  username: "username",
+  password: "password",
+};
+
+module.exports = {
+  mockUsers,
+  mockUser,
+  newMockUser,
+  mockRol,
+  mockToken,
+  mockUserCredentials,
+  mockBadUser,
+};

@@ -18,7 +18,7 @@ jobs:
       - name: Testing coverage
         run: npm run test-coverage
         env:
-          JWT_SECRET_USER: ${( secrets.SECRET)}
+          JWT_SECRET_USER: ${( secrets.JWT_SECRET)}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

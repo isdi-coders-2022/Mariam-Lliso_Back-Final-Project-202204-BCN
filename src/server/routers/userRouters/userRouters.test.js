@@ -1,4 +1,5 @@
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 const request = require("supertest");
@@ -6,7 +7,11 @@ const app = require("../../index");
 const connectDatabase = require("../../../database");
 
 const User = require("../../../database/models/User");
-const { newMockUser, mockUserCredentials } = require("../../mocks/mocksUsers");
+const {
+  newMockUser,
+  mockUserCredentials,
+  mockToken,
+} = require("../../mocks/mocksUsers");
 const { rolUser } = require("../../../database/utils/userRols");
 
 let mongoServer;
@@ -80,6 +85,8 @@ describe("Given a POST 'user/register' endpoint", () => {
 describe("Given a POST /user/login endpoint", () => {
   describe("When it receives a request with a registered user", () => {
     test("Then it should respond with a 200 status and a token", async () => {
+      jwt.sign = jest.fn().mockReturnValue(mockToken);
+
       const { body } = await request(app)
         .post("/user/login")
         .send(mockUserCredentials)

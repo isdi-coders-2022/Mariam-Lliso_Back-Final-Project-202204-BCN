@@ -82,6 +82,7 @@ describe("Given a userRegister function", () => {
 describe("Given userLogin function", () => {
   describe("When it's called with correct user credentials", () => {
     jwt.sign = jest.fn().mockReturnValue(mockToken);
+
     test("Then it should call response method status with 200 and method json with a token", async () => {
       // Arrange
       const req = {

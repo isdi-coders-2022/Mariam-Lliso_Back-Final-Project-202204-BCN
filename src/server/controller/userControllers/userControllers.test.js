@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../../../database/models/User");
 const UserRol = require("../../../database/models/UserRol");
@@ -12,10 +13,6 @@ const { userRegister, userLogin } = require("./userControllers");
 
 jest.mock("../../../database/models/User", () => ({
   findOne: jest.fn().mockResolvedValue(() => mockUserCredentials),
-}));
-
-jest.mock("jsonwebtoken", () => ({
-  sign: () => mockToken,
 }));
 
 jest.mock("bcrypt", () => ({
@@ -84,6 +81,7 @@ describe("Given a userRegister function", () => {
 
 describe("Given userLogin function", () => {
   describe("When it's called with correct user credentials", () => {
+    jwt.sign = jest.fn().mockReturnValue(mockToken);
     test("Then it should call response method status with 200 and method json with a token", async () => {
       // Arrange
       const req = {

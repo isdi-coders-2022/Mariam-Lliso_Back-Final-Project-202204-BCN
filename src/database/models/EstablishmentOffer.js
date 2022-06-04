@@ -4,6 +4,7 @@ const EstablishmentOfferSchema = new Schema({
   code: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -14,7 +15,7 @@ const EstablishmentOfferSchema = new Schema({
 const EstablishmentOffer = model(
   "EstablishmentOffer",
   EstablishmentOfferSchema,
-  "establishmentoffer"
+  "establishmentoffers"
 );
 
 module.exports = EstablishmentOffer;

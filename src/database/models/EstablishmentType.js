@@ -4,6 +4,7 @@ const EstablishmentTypeSchema = new Schema({
   code: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -14,7 +15,7 @@ const EstablishmentTypeSchema = new Schema({
 const EstablishmentType = model(
   "EstablishmentType",
   EstablishmentTypeSchema,
-  "establishmenttype"
+  "establishmenttypes"
 );
 
 module.exports = EstablishmentType;

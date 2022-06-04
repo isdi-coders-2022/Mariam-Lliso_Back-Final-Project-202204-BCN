@@ -3,7 +3,6 @@ const debug = require("debug")("vlcSinGluten:server:controller:users");
 const chalk = require("chalk");
 const jwt = require("jsonwebtoken");
 const User = require("../../../database/models/User");
-const UserRol = require("../../../database/models/UserRol");
 
 const userRegister = async (req, res, next) => {
   try {
@@ -22,17 +21,12 @@ const userRegister = async (req, res, next) => {
 
     const encryptPassword = await bcrypt.hash(password, 10);
 
-    const queryFindUserRol = {
-      code: userRol,
-    };
-    const rol = await UserRol.findOne(queryFindUserRol);
-
     const queryCreate = {
       name,
       surnames,
       username,
       password: encryptPassword,
-      userRol: rol,
+      userRol,
     };
 
     await User.create(queryCreate);

@@ -12,7 +12,7 @@ const {
   mockUserCredentials,
   mockToken,
 } = require("../../mocks/mocksUsers");
-const { rolUser } = require("../../../database/utils/userRols");
+const { rolAdmin } = require("../../../database/utils/userRols");
 
 let mongoServer;
 
@@ -43,7 +43,7 @@ describe("Given a POST 'user/register' endpoint", () => {
         surnames: "y sus monyecos",
         username: "johndoe",
         password: "johndoe",
-        userRol: rolUser,
+        userRol: rolAdmin,
       };
 
       const { body } = await request(app)

@@ -20,28 +20,8 @@ const EstablishmentSchema = new Schema({
   description: {
     type: String,
   },
-  road_type: {
-    type: [Schema.Types.ObjectId],
-    ref: "RoadType",
-    require: true,
-  },
   adress: {
     type: String,
-    require: true,
-  },
-  municipality: {
-    type: [Schema.Types.ObjectId],
-    ref: "Municipality",
-    require: true,
-  },
-  province: {
-    type: [Schema.Types.ObjectId],
-    ref: "Province",
-    require: true,
-  },
-  autonomous_regions: {
-    type: [Schema.Types.ObjectId],
-    ref: "Region",
     require: true,
   },
   phone: {
@@ -51,6 +31,9 @@ const EstablishmentSchema = new Schema({
     type: String,
   },
   website: {
+    type: String,
+  },
+  picture: {
     type: String,
   },
 });

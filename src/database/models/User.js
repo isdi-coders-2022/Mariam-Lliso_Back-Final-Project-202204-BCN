@@ -19,9 +19,12 @@ const UserSchema = new Schema({
     require: true,
   },
   userRol: {
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.String,
     ref: "UserRol",
     require: true,
+  },
+  avatar: {
+    type: String,
   },
 });
 

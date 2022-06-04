@@ -23,6 +23,7 @@ const userRegisterCredentialsSchema = {
       .max(3)
       .messages({ message: "A userRol is Required" })
       .required(),
+    avatar: Joi.string().allow(""),
   }),
 };
 

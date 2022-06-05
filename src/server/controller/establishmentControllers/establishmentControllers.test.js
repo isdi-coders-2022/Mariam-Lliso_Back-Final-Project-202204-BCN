@@ -28,14 +28,14 @@ jest.mock("../../../database/models/Establishment", () => ({
     {
       establishmentType: [
         {
-          code: "RES",
-          description: "Restaurante",
+          code: "CAF",
+          description: "Cafetería",
         },
       ],
-      name: "La Canyà Menjars",
-      cusine: "Cocina mediterránea",
-      adress: "pza puerta del sol, 8",
-      municipality: "La Canyada",
+      name: "Menjars",
+      cusine: "Dulces",
+      adress: "calle recafort, 8",
+      municipality: "meliana",
       region: "Valencia",
     },
   ]),
@@ -83,7 +83,7 @@ describe("Given getEstablishments middleware", () => {
           limit: 2,
           page: 1,
         },
-        establishments: [mockEstablishment[2], mockEstablishment[3]],
+        establishments: [mockEstablishment[0], mockEstablishment[1]],
       };
 
       await getEstablishments(reqPage1, res, null);

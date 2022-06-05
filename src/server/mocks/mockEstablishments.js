@@ -15,14 +15,14 @@ const mockEstablishment = [
   {
     establishmentType: [
       {
-        code: "RES",
-        description: "Restaurante",
+        code: "CAF",
+        description: "Cafetería",
       },
     ],
-    name: "La Canyà Menjars",
-    cusine: "Cocina mediterránea",
-    adress: "pza puerta del sol, 8",
-    municipality: "La Canyada",
+    name: "Menjars",
+    cusine: "Dulces",
+    adress: "calle recafort, 8",
+    municipality: "meliana",
     region: "Valencia",
   },
   {
@@ -32,10 +32,10 @@ const mockEstablishment = [
         description: "Restaurante",
       },
     ],
-    name: "La Canyà Menjars",
-    cusine: "Cocina mediterránea",
-    adress: "pza puerta del sol, 8",
-    municipality: "La Canyada",
+    name: "Menjars",
+    cusine: "mediterránea",
+    adress: "calle catalunya",
+    municipality: "benimaclet",
     region: "Valencia",
   },
   {
@@ -45,11 +45,11 @@ const mockEstablishment = [
         description: "Restaurante",
       },
     ],
-    name: "La Canyà Menjars",
-    cusine: "Cocina mediterránea",
+    name: "Arroz el famos",
+    cusine: "mediterránea",
     adress: "pza puerta del sol, 8",
-    municipality: "La Canyada",
-    region: "Valencia",
+    municipality: "Benidorm",
+    region: "Alicante",
   },
 ];
 

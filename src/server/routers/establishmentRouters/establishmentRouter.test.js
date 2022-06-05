@@ -5,10 +5,7 @@ const request = require("supertest");
 const app = require("../../index");
 const connectDatabase = require("../../../database");
 const Establishment = require("../../../database/models/Establishment");
-const {
-  mockEstablishment,
-  mockEstablishmentsData,
-} = require("../../mocks/mockEstablishments");
+const { mockEstablishmentsData } = require("../../mocks/mockEstablishments");
 
 let mongoServer;
 

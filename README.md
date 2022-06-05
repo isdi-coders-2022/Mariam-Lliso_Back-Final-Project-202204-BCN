@@ -15,7 +15,7 @@
 - endpoint cerrado, solo usuario con sesión iniciada
 - para ver el perfil del usuario
 
-### [GET] /establishments/?limit=10&skip=0 🍊
+### [GET] /establishments/?limit=10&page=0 ✅
 
 - endpoint abierto
 - para ver un listado de establecimientos paginados
@@ -30,7 +30,7 @@
 - endpoint cerrado, solo usuario con sesión iniciada
 - para añadir establecimientos
 
-### [DELETE] /establishments
+### [DELETE] /establishments/:idEstablishment
 
 - endpoint cerrado, solo usuario con sesión iniciada
 - para borrar un establecimiento

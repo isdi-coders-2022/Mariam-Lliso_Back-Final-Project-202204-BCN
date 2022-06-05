@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { errorNotFound, generalServerError } = require("./middlewares/errors");
 const userRouter = require("./routers/userRouters/userRouters");
+const establishmentRouter = require("./routers/establishmentRouters/establishmentRouters");
 
 const corsOptions = {
   origin: [
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(helmet());
 
 app.use("/user", userRouter);
+app.use("/establishments", establishmentRouter);
 
 app.use(errorNotFound);
 app.use(generalServerError);

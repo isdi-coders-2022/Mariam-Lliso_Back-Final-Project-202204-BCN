@@ -29,6 +29,7 @@
       "!src/server/initServer.js",
       "!src/server/index.js",
       "!src/database/index.js",
+      "!src/server/mocks/**",
       "!.eslintrc.js"
     ]
   },

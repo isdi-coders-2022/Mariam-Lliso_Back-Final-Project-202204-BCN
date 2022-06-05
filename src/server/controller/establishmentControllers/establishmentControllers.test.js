@@ -13,6 +13,12 @@ jest.mock("../../../database/models/Establishment", () => ({
   ...jest.requireActual("../../../database/models/Establishment"),
   limit: jest.fn().mockResolvedValue([
     {
+      establishmentType: [
+        {
+          code: "RES",
+          description: "Restaurante",
+        },
+      ],
       name: "La Canyà Menjars",
       cusine: "Cocina mediterránea",
       adress: "pza puerta del sol, 8",
@@ -20,6 +26,12 @@ jest.mock("../../../database/models/Establishment", () => ({
       region: "Valencia",
     },
     {
+      establishmentType: [
+        {
+          code: "RES",
+          description: "Restaurante",
+        },
+      ],
       name: "La Canyà Menjars",
       cusine: "Cocina mediterránea",
       adress: "pza puerta del sol, 8",

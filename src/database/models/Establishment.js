@@ -5,7 +5,6 @@ const dictionarySchema = Schema(
     code: {
       type: String,
       required: true,
-      unique: true,
     },
     description: {
       type: String,
@@ -35,6 +34,14 @@ const EstablishmentSchema = new Schema({
     type: String,
   },
   adress: {
+    type: String,
+    require: true,
+  },
+  municipality: {
+    type: String,
+    require: true,
+  },
+  region: {
     type: String,
     require: true,
   },

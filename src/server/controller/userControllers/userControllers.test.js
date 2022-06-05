@@ -145,7 +145,7 @@ describe("Given userLogin function", () => {
       const expectErrorMessage = new Error("Username or password are worng");
 
       // Act
-      await userRegister(req, null, next);
+      await userLogin(req, null, next);
 
       // Assert
       expect(next).toHaveBeenCalledWith(expectErrorMessage);

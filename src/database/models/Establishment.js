@@ -1,9 +1,23 @@
 const { Schema, model } = require("mongoose");
 
+const dictionarySchema = Schema(
+  {
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
 const EstablishmentSchema = new Schema({
   establishmentType: {
-    type: [Schema.Types.ObjectId],
-    ref: "EstablishmentType",
+    type: [dictionarySchema],
     require: true,
   },
   name: {
@@ -13,9 +27,9 @@ const EstablishmentSchema = new Schema({
   cusine: {
     type: String,
   },
-  offer: {
-    type: [Schema.Types.ObjectId],
-    ref: "EstablishmentOffer",
+  establishmentOffer: {
+    type: [dictionarySchema],
+    default: [],
   },
   description: {
     type: String,
@@ -41,7 +55,7 @@ const EstablishmentSchema = new Schema({
 const Establishment = model(
   "Establishment",
   EstablishmentSchema,
-  "establishment"
+  "establishments"
 );
 
 module.exports = Establishment;

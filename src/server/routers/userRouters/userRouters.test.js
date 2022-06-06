@@ -95,4 +95,17 @@ describe("Given a POST /user/login endpoint", () => {
       expect(body.token).not.toBeNull();
     });
   });
+
+  describe("When it receives a bad request", () => {
+    test("Then it should respond with status 400 and message 'Validation Failed'", async () => {
+      const expectedMessage = "Validation Failed";
+
+      const { body } = await request(app)
+        .post("/user/login")
+        .send({})
+        .expect(400);
+
+      expect(body.msg).toBe(expectedMessage);
+    });
+  });
 });

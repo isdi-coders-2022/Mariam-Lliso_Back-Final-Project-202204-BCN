@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const dictionarySchema = Schema(
+const dictionarySchema = new Schema(
   {
     code: {
       type: String,

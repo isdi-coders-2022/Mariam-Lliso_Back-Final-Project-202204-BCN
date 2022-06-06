@@ -19,7 +19,7 @@ const UserSchema = new Schema({
     require: true,
   },
   userRol: {
-    type: Schema.Types.String,
+    type: Schema.Types.ObjectId,
     ref: "UserRol",
     require: true,
   },

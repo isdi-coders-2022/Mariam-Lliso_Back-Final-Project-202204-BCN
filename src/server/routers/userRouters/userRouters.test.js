@@ -13,6 +13,7 @@ const {
   mockToken,
 } = require("../../mocks/mocksUsers");
 const { rolAdmin } = require("../../../database/utils/userRols");
+const UserRol = require("../../../database/models/UserRol");
 
 let mongoServer;
 
@@ -85,6 +86,7 @@ describe("Given a POST 'user/register' endpoint", () => {
 describe("Given a POST /user/login endpoint", () => {
   describe("When it receives a request with a registered user", () => {
     test("Then it should respond with a 200 status and a token", async () => {
+      UserRol.findOne = jest.fn().mockResolvedValue("USR");
       jwt.sign = jest.fn().mockReturnValue(mockToken);
 
       const { body } = await request(app)

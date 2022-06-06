@@ -3,12 +3,16 @@ const debug = require("debug")("vlcSinGluten:server:controller:users");
 const chalk = require("chalk");
 const jwt = require("jsonwebtoken");
 const User = require("../../../database/models/User");
+const UserRol = require("../../../database/models/UserRol");
 
 const userRegister = async (req, res, next) => {
   try {
-    const { name, surnames, username, password, userRol } = req.body;
-    const queryFind = { username };
-    const user = await User.findOne(queryFind);
+    const { name, surnames, username, password, userRol = "USR" } = req.body;
+    const queryFindUser = { username };
+    const user = await User.findOne(queryFindUser);
+
+    const queryFindUserRol = { userRol };
+    const userRolId = await UserRol.findOne(queryFindUserRol);
 
     if (user) {
       const customError = new Error("User already exists");
@@ -26,7 +30,7 @@ const userRegister = async (req, res, next) => {
       surnames,
       username,
       password: encryptPassword,
-      userRol,
+      userRol: userRolId,
     };
 
     await User.create(queryCreate);
@@ -46,6 +50,7 @@ const userLogin = async (req, res, next) => {
 
   const query = { username };
   const user = await User.findOne(query);
+  const userRol = await UserRol.findOne(user.userRol);
 
   if (!user) {
     debug(chalk.red("Username not found"));
@@ -60,6 +65,7 @@ const userLogin = async (req, res, next) => {
   const userData = {
     id: user.id,
     username: user.username,
+    userRol: userRol.code,
   };
 
   const isPasswordCorrect = await bcrypt.compare(password, user.password);

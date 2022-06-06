@@ -1,4 +1,4 @@
-const { rolUser } = require("../../database/utils/userRols");
+const { rolUser, rolAdmin } = require("../../database/utils/userRols");
 
 const mockUsers = [
   {
@@ -27,10 +27,11 @@ const mockBadUser = {
 };
 
 const newMockUser = {
-  name: "marta",
-  username: "marta",
-  password: "marta",
-  userRol: rolUser,
+  name: "johndoe",
+  surnames: "y sus monyecos",
+  username: "johndoe",
+  password: "johndoe",
+  userRol: rolAdmin,
 };
 
 const mockRol = {
@@ -40,8 +41,8 @@ const mockRol = {
 const mockToken = "";
 
 const mockUserCredentials = {
-  username: "marta",
-  password: "marta",
+  username: "johndoe",
+  password: "johndoe",
 };
 
 module.exports = {

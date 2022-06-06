@@ -12,7 +12,7 @@ const {
   mockUserCredentials,
   mockToken,
 } = require("../../mocks/mocksUsers");
-const { rolAdmin } = require("../../../database/utils/userRols");
+const { rolUser } = require("../../../database/utils/userRols");
 const UserRol = require("../../../database/models/UserRol");
 
 let mongoServer;
@@ -39,17 +39,16 @@ describe("Given a POST 'user/register' endpoint", () => {
   describe("When it receives a request with valid name, username and password", () => {
     test("Then it should respond with status 201 and message 'User created'", async () => {
       const expectedMessage = "User created";
-      const newUser = {
-        name: "johndoe",
-        surnames: "y sus monyecos",
-        username: "johndoe",
-        password: "johndoe",
-        userRol: rolAdmin,
+      const mockUsertoRegister = {
+        name: "johndos",
+        surnames: "johndos",
+        username: "johndos",
+        password: "johndos",
+        userRol: rolUser,
       };
-
       const { body } = await request(app)
         .post("/user/register")
-        .send(newUser)
+        .send(mockUsertoRegister)
         .expect(201);
 
       expect(body.msg).toBe(expectedMessage);

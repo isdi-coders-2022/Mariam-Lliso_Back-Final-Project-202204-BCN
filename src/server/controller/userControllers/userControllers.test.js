@@ -9,6 +9,7 @@ const {
   mockToken,
   mockBadUser,
   mockUserWithId,
+  mockRolWithoutId,
 } = require("../../mocks/mocksUsers");
 const {
   userRegister,
@@ -141,6 +142,7 @@ describe("Given userLogin function", () => {
   describe("When it's called with incorrect password", () => {
     test("Then it should call next method with 'Username or password are worng'", async () => {
       // Arrange
+      User.findOne = jest.fn().mockResolvedValue(true);
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
       const req = {
@@ -172,15 +174,11 @@ describe("Given getUserProfile function", () => {
         },
       };
 
-      const expectedRol = {
-        code: "USR",
-        description: "Usuario/a",
-      };
       const expectUserData = {
         name: mockUserWithId.name,
         surnames: mockUserWithId.surnames,
         username: mockUserWithId.username,
-        userRol: expectedRol,
+        userRol: mockRolWithoutId,
       };
 
       const expectedStatus = 200;
@@ -195,6 +193,29 @@ describe("Given getUserProfile function", () => {
       // Assert
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
       expect(res.json).toHaveBeenCalledWith(expectUserData);
+    });
+  });
+
+  describe("When it's called with a incorrect user id at request", () => {
+    test("Then it should call next method with error 'Bad request'", async () => {
+      // Arrange
+      const req = {
+        user: {
+          id: "evil user",
+        },
+      };
+
+      const expectedError = new Error("Bad request");
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(false),
+      }));
+
+      // Act
+      await getUserProfile(req, res, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

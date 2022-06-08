@@ -8,8 +8,14 @@ const {
   mockUserCredentials,
   mockToken,
   mockBadUser,
+  mockUserWithId,
+  mockRolWithoutId,
 } = require("../../mocks/mocksUsers");
-const { userRegister, userLogin } = require("./userControllers");
+const {
+  userRegister,
+  userLogin,
+  getUserProfile,
+} = require("./userControllers");
 
 jest.mock("../../../database/models/User", () => ({
   findOne: jest.fn().mockResolvedValue(() => mockUserCredentials),
@@ -26,6 +32,10 @@ const res = {
 };
 
 const next = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("Given a userRegister function", () => {
   describe("When it's called with a new name, username and password", () => {
@@ -132,6 +142,7 @@ describe("Given userLogin function", () => {
   describe("When it's called with incorrect password", () => {
     test("Then it should call next method with 'Username or password are worng'", async () => {
       // Arrange
+      User.findOne = jest.fn().mockResolvedValue(true);
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
       const req = {
@@ -149,6 +160,62 @@ describe("Given userLogin function", () => {
 
       // Assert
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+});
+
+describe("Given getUserProfile function", () => {
+  describe("When it's called with a correct user id at request", () => {
+    test("Then it should call response method status with 200 and method json with a user profile data", async () => {
+      // Arrange
+      const req = {
+        user: {
+          id: mockRol,
+        },
+      };
+
+      const expectUserData = {
+        name: mockUserWithId.name,
+        surnames: mockUserWithId.surnames,
+        username: mockUserWithId.username,
+        userRol: mockRolWithoutId,
+      };
+
+      const expectedStatus = 200;
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(mockUserWithId),
+      }));
+
+      // Act
+      await getUserProfile(req, res, next);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith(expectUserData);
+    });
+  });
+
+  describe("When it's called with a incorrect user id at request", () => {
+    test("Then it should call next method with error 'Bad request'", async () => {
+      // Arrange
+      const req = {
+        user: {
+          id: "evil user",
+        },
+      };
+
+      const expectedError = new Error("Bad request");
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(false),
+      }));
+
+      // Act
+      await getUserProfile(req, res, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

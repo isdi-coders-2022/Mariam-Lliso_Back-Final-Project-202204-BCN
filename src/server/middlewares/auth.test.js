@@ -2,6 +2,21 @@ const jwt = require("jsonwebtoken");
 const auth = require("./auth");
 
 describe("Given a auth function", () => {
+  describe("When it receives a request without authorization", () => {
+    test("Then it should call the received next function with a custom error 'Invalid Authorization'", () => {
+      const expectedCustomError = new Error("Invalid Authorization");
+      const req = {
+        headers: {},
+      };
+
+      const next = jest.fn();
+
+      auth(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedCustomError);
+    });
+  });
+
   describe("When it receives a request with a valid authorization but invalid token", () => {
     test("Then it should call the received next function with a custom error 'Invalid token'", () => {
       const expectedCustomError = new Error("Invalid token");

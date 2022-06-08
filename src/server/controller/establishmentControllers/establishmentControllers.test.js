@@ -1,5 +1,5 @@
 const Establishment = require("../../../database/models/Establishment");
-const { mockEstablishment } = require("../../mocks/mockEstablishments");
+const { mockEstablishments } = require("../../mocks/mockEstablishments");
 const { getEstablishments } = require("./establishmentControllers");
 
 const res = {
@@ -59,7 +59,7 @@ describe("Given getEstablishments middleware", () => {
           page: 2,
         },
         previousPage: null,
-        establishments: [mockEstablishment[0], mockEstablishment[1]],
+        establishments: [mockEstablishments[0], mockEstablishments[1]],
       };
 
       await getEstablishments(reqPage1, res, null);
@@ -83,7 +83,7 @@ describe("Given getEstablishments middleware", () => {
           limit: 2,
           page: 1,
         },
-        establishments: [mockEstablishment[0], mockEstablishment[1]],
+        establishments: [mockEstablishments[0], mockEstablishments[1]],
       };
 
       await getEstablishments(reqPage1, res, null);
@@ -107,7 +107,7 @@ describe("Given getEstablishments middleware", () => {
           page: 2,
         },
         previousPage: null,
-        establishments: [mockEstablishment[0], mockEstablishment[1]],
+        establishments: [mockEstablishments[0], mockEstablishments[1]],
       };
 
       await getEstablishments(req, res, null);

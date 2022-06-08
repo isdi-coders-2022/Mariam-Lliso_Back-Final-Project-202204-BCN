@@ -28,6 +28,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   await request(app).post("/user/register").send(newMockUser).expect(201);
 });
 
@@ -82,7 +83,7 @@ describe("Given a POST 'user/register' endpoint", () => {
   });
 });
 
-describe("Given a POST /user/login endpoint", () => {
+describe("Given a POST user/login endpoint", () => {
   describe("When it receives a request with a registered user", () => {
     test("Then it should respond with a 200 status and a token", async () => {
       UserRol.findOne = jest.fn().mockResolvedValue("USR");

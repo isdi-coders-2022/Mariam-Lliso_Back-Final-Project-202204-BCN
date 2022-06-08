@@ -83,4 +83,28 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin, userRegister };
+const getUserProfile = async (req, res, next) => {
+  const { id } = req.user;
+  try {
+    const user = await User.findOne({ id }).populate("userRol");
+
+    const userProfileData = {
+      name: user.name,
+      surnames: user.surnames,
+      username: user.username,
+      userRol: {
+        code: user.userRol.code,
+        description: user.userRol.description,
+      },
+    };
+
+    res.status(200).json(userProfileData);
+  } catch (error) {
+    error.statusCode = 400;
+    debug(chalk.red("Bad request"));
+    error.message = "Bad request";
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userRegister, getUserProfile };

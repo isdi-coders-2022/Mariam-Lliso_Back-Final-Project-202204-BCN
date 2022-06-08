@@ -35,7 +35,17 @@ const newMockUser = {
 };
 
 const mockRol = {
+  code: "USR",
+  description: "Usuario/a",
   id: "6295c9304bab9e5540ff8fc8",
+};
+
+const mockUserWithId = {
+  id: 1,
+  name: "marta",
+  username: "marta",
+  password: "marta",
+  userRol: mockRol,
 };
 
 const mockToken = "";
@@ -53,4 +63,5 @@ module.exports = {
   mockToken,
   mockUserCredentials,
   mockBadUser,
+  mockUserWithId,
 };

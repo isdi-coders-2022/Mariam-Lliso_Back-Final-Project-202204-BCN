@@ -8,8 +8,13 @@ const {
   mockUserCredentials,
   mockToken,
   mockBadUser,
+  mockUserWithId,
 } = require("../../mocks/mocksUsers");
-const { userRegister, userLogin } = require("./userControllers");
+const {
+  userRegister,
+  userLogin,
+  getUserProfile,
+} = require("./userControllers");
 
 jest.mock("../../../database/models/User", () => ({
   findOne: jest.fn().mockResolvedValue(() => mockUserCredentials),
@@ -26,6 +31,10 @@ const res = {
 };
 
 const next = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("Given a userRegister function", () => {
   describe("When it's called with a new name, username and password", () => {
@@ -149,6 +158,43 @@ describe("Given userLogin function", () => {
 
       // Assert
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+});
+
+describe("Given getUserProfile function", () => {
+  describe("When it's called with a correct user id at request", () => {
+    test("Then it should call response method status with 200 and method json with a user profile data", async () => {
+      // Arrange
+      const req = {
+        user: {
+          id: mockRol,
+        },
+      };
+
+      const expectedRol = {
+        code: "USR",
+        description: "Usuario/a",
+      };
+      const expectUserData = {
+        name: mockUserWithId.name,
+        surnames: mockUserWithId.surnames,
+        username: mockUserWithId.username,
+        userRol: expectedRol,
+      };
+
+      const expectedStatus = 200;
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(mockUserWithId),
+      }));
+
+      // Act
+      await getUserProfile(req, res, next);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith(expectUserData);
     });
   });
 });

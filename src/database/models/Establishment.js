@@ -46,7 +46,7 @@ const EstablishmentSchema = new Schema({
     require: true,
   },
   phone: {
-    type: String,
+    type: Number,
   },
   email: {
     type: String,

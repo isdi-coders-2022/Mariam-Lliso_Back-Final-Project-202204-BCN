@@ -4,6 +4,7 @@ const { mockEstablishment } = require("../../mocks/mockEstablishments");
 const {
   getEstablishments,
   deleteEstablishmentById,
+  getEstablishmentById,
 } = require("./establishmentControllers");
 
 const res = {
@@ -195,6 +196,37 @@ describe("Given deleteEstablishmentById middleware", () => {
       await deleteEstablishmentById(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+});
+
+describe("Given getEstablishmentById middleware", () => {
+  describe("When it's called with a correct establishment id at request", () => {
+    test("Then it should call it's response json status with 200 and json with the expected object", async () => {
+      const req = {
+        params: { idEstablishment: 1234 },
+      };
+      const expectedResponse = mockEstablishment;
+
+      Establishment.findOne = jest.fn().mockResolvedValue(mockEstablishment);
+      await getEstablishmentById(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it's called with a incorrect establishment id at request", () => {
+    test("Then it should call it's next function with 'Bad request'", async () => {
+      const req = {
+        params: { idEstablishment: 1234 },
+      };
+      const expectedError = new Error("Bad request");
+
+      Establishment.findOne = jest.fn().mockRejectedValue(expectedError);
+      await getEstablishmentById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

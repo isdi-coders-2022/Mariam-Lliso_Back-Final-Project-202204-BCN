@@ -10,7 +10,7 @@
 - endpoint abierto
 - para crear un usuario
 
-### [GET] /users/:username
+### [GET] /users/profile ✅
 
 - endpoint cerrado, solo usuario con sesión iniciada
 - para ver el perfil del usuario
@@ -20,17 +20,17 @@
 - endpoint abierto
 - para ver un listado de establecimientos paginados
 
-### [GET] /establishments/:idEstablishment
+### [GET] /establishments/:idEstablishment ✅
 
 - endpoint abierto
 - para ver un establecimiento
 
-### [POST] /establishments
+### [POST] /establishments 🍊
 
 - endpoint cerrado, solo usuario con sesión iniciada
 - para añadir establecimientos
 
-### [DELETE] /establishments/:idEstablishment
+### [DELETE] /establishments/:idEstablishment ✅
 
 - endpoint cerrado, solo usuario con sesión iniciada
 - para borrar un establecimiento

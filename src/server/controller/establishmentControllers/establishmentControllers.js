@@ -53,6 +53,20 @@ const getEstablishments = async (req, res, next) => {
   }
 };
 
+const getEstablishmentById = async (req, res, next) => {
+  const { idEstablishment } = req.params;
+  try {
+    const establishment = await Establishment.findOne({ idEstablishment });
+    debug(chalk.green("Request to get one establishment received"));
+    res.status(200).json(establishment);
+  } catch (error) {
+    error.statusCode = 400;
+    debug(chalk.red("Bad request"));
+    error.message = "Bad request";
+    next(error);
+  }
+};
+
 const deleteEstablishmentById = async (req, res, next) => {
   const { username, userRol } = req.user;
 
@@ -76,13 +90,6 @@ const deleteEstablishmentById = async (req, res, next) => {
     debug(chalk.red(`${username} attempt to delete an establishment`));
     next(error);
   }
-};
-
-const getEstablishmentById = async (req, res) => {
-  const { idEstablishment } = req.params;
-  const establishment = await Establishment.findOne({ idEstablishment });
-  debug(chalk.green("Request to get one establishment received"));
-  res.status(200).json(establishment);
 };
 
 module.exports = {

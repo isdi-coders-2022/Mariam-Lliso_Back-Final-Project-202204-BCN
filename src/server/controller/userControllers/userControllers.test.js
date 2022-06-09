@@ -100,12 +100,21 @@ describe("Given userLogin function", () => {
           id: 1,
           username: "username",
           password: "password",
+          userRol: { code: "USR" },
         },
       };
 
-      const expectedStatus = 200;
+      const mockCredentials = {
+        username: "username",
+        password: "password",
+        userRol: { code: "USR" },
+      };
 
-      User.findOne = jest.fn().mockResolvedValue(true);
+      const expectedStatus = 200;
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(mockCredentials),
+      }));
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
 
       // Act
       await userLogin(req, res, null);
@@ -119,13 +128,16 @@ describe("Given userLogin function", () => {
   describe("When it's called with incorrect username", () => {
     test("Then it should call next method with 'Username or password are worng'", async () => {
       // Arrange
-      User.findOne = jest.fn().mockResolvedValue(false);
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(false),
+      }));
 
       const req = {
         body: {
           id: 1,
           username: "menganito",
           password: "password",
+          userRol: { code: "USR" },
         },
       };
 
@@ -142,7 +154,14 @@ describe("Given userLogin function", () => {
   describe("When it's called with incorrect password", () => {
     test("Then it should call next method with 'Username or password are worng'", async () => {
       // Arrange
-      User.findOne = jest.fn().mockResolvedValue(true);
+      const mockCredentials = {
+        username: "username",
+        password: "password",
+        userRol: { code: "USR" },
+      };
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(mockCredentials),
+      }));
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
       const req = {

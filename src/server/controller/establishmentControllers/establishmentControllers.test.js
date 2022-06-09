@@ -1,6 +1,9 @@
 const Establishment = require("../../../database/models/Establishment");
 const { mockEstablishments } = require("../../mocks/mockEstablishments");
-const { getEstablishments } = require("./establishmentControllers");
+const {
+  getEstablishments,
+  deleteEstablishmentById,
+} = require("./establishmentControllers");
 
 const res = {
   status: jest.fn().mockReturnThis(),
@@ -8,6 +11,10 @@ const res = {
 };
 
 const next = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 jest.mock("../../../database/models/Establishment", () => ({
   ...jest.requireActual("../../../database/models/Establishment"),
@@ -102,10 +109,7 @@ describe("Given getEstablishments middleware", () => {
       const establishmentsData = {
         totalEstablishments: 2,
         currentPage: 1,
-        nextPage: {
-          limit: 2,
-          page: 2,
-        },
+        nextPage: null,
         previousPage: null,
         establishments: [mockEstablishments[0], mockEstablishments[1]],
       };
@@ -129,6 +133,37 @@ describe("Given getEstablishments middleware", () => {
       await getEstablishments(req, null, next);
 
       expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given deleteEstablishmentById middleware", () => {
+  describe("When it receives a request with a correct id", () => {
+    test("Then it should call it's response json status with 200 and json with the expected object", async () => {
+      const req = {
+        params: { idEstablishment: 1234 },
+      };
+      const expectedResponse = {
+        msg: "The establishment has been deleted",
+      };
+
+      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(true);
+      await deleteEstablishmentById(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it receives a request with no param id", () => {
+    test("Then it should call it's response json status with 400 and json with  error message 'Bad request'", async () => {
+      const req = { params: { idEstablishment: null } };
+      const expectErrorMessage = new Error("Bad request");
+
+      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(false);
+      await deleteEstablishmentById(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
     });
   });
 });

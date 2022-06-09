@@ -52,6 +52,24 @@ const getEstablishments = async (req, res, next) => {
   }
 };
 
+const deleteEstablishmentById = async (req, res, next) => {
+  const { idEstablishment } = req.params;
+
+  try {
+    await Establishment.findOneAndDelete({
+      idEstablishment,
+    });
+
+    res.status(200).json({ msg: "The establishment has been deleted" });
+  } catch (error) {
+    error.statusCode = 400;
+    debug(chalk.red("Bad request"));
+    error.message = "Bad request";
+    next(error);
+  }
+};
+
 module.exports = {
   getEstablishments,
+  deleteEstablishmentById,
 };

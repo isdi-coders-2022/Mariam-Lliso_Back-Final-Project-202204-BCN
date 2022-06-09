@@ -1,6 +1,7 @@
 const debug = require("debug")("vlcSinGluten:server:controller:establishment");
 const chalk = require("chalk");
 const Establishment = require("../../../database/models/Establishment");
+const { rolAdmin } = require("../../../database/utils/userRols");
 
 const getEstablishments = async (req, res, next) => {
   try {
@@ -52,6 +53,40 @@ const getEstablishments = async (req, res, next) => {
   }
 };
 
+const deleteEstablishmentById = async (req, res, next) => {
+  const { username, userRol } = req.user;
+
+  if (userRol === rolAdmin) {
+    const { idEstablishment } = req.params;
+    try {
+      await Establishment.findOneAndDelete({
+        idEstablishment,
+      });
+
+      res.status(200).json({ msg: "The establishment has been deleted" });
+    } catch (error) {
+      error.statusCode = 400;
+      debug(chalk.red("Bad request"));
+      error.message = "Bad request";
+      next(error);
+    }
+  } else {
+    const error = new Error("Only administrators can delete an establishment");
+    error.statusCode = 401;
+    debug(chalk.red(`${username} attempt to delete an establishment`));
+    next(error);
+  }
+};
+
+const getEstablishmentById = async (req, res) => {
+  const { idEstablishment } = req.params;
+  const establishment = await Establishment.findOne({ idEstablishment });
+  debug(chalk.green("Request to get one establishment received"));
+  res.status(200).json(establishment);
+};
+
 module.exports = {
   getEstablishments,
+  deleteEstablishmentById,
+  getEstablishmentById,
 };

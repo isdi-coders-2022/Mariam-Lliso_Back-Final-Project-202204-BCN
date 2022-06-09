@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "57bee144-ff0b-42ca-9c03-7948abc7f867",
+		"name": "vlcSinGluten",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7713857"
+	},
+	"item": [
+		{
+			"name": "/user/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Mariam\",\n    \"username\": \"periko\",\n    \"password\": \"dinosaurio\",\n    \"userRol\": \"ADM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/user/register",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/profile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTkzZTE3OTA2ZjlmODU0OTRhZGMyMiIsInVzZXJuYW1lIjoibWFyaWFtYWRtaW4iLCJ1c2VyUm9sIjoiVVNSIiwiaWF0IjoxNjU0Njk0NjQ0fQ.0CHf0ew1etTn4G5XPU0PFviwmUltYYn2mB5UiBu0VhI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Mariam\",\n    \"username\": \"periko\",\n    \"password\": \"dinosaurio\",\n    \"userRol\": \"USR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/user/profile",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/establishments/:idEstablishment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTkzZTE3OTA2ZjlmODU0OTRhZGMyMiIsInVzZXJuYW1lIjoibWFyaWFtYWRtaW4iLCJ1c2VyUm9sIjoiVVNSIiwiaWF0IjoxNjU0Njk0NjQ0fQ.0CHf0ew1etTn4G5XPU0PFviwmUltYYn2mB5UiBu0VhI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/establishments/629c6fab590f5fafee717fed",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"establishments",
+						"629c6fab590f5fafee717fed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"mariamadmin\",\n    \"password\": \"mariamadmin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/user/login",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/establishments/list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"mariamadmin\",\n    \"password\": \"mariamadmin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}establishments/list",
+					"host": [
+						"{{local}}establishments"
+					],
+					"path": [
+						"list"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "http://localhost:4000/"
+		}
+	]
+}

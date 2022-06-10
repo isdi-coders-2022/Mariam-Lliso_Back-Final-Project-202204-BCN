@@ -3,6 +3,10 @@ const chalk = require("chalk");
 const path = require("path");
 const Establishment = require("../../../database/models/Establishment");
 const { rolAdmin } = require("../../../database/utils/userRols");
+const {
+  establishmentTypes,
+  establishmentOffers,
+} = require("../../utils/dictionaries/establishmentTypesAndOffers");
 
 const getEstablishments = async (req, res, next) => {
   try {
@@ -104,17 +108,33 @@ const createEstablishment = async (req, res, next) => {
   const { file } = req;
 
   if (userRol === rolAdmin) {
-    const newEstablishment = {
+    const establishmentType = establishmentTypes.find(
+      (type) => type.code === establishment.establishmentType
+    );
+
+    let newEstablishment = {
       ...establishment,
+      establishmentType,
       picture: file ? path.join("images", newImageName) : "",
       pictureBackup: file ? firebaseFileURL : "",
     };
+
+    if (establishment.establishmentOffer) {
+      const establishmentOffer = establishmentOffers.find(
+        (offer) => offer.code === establishment.establishmentOffer
+      );
+
+      newEstablishment = {
+        ...newEstablishment,
+        establishmentOffer,
+      };
+    }
 
     try {
       const createdEstablishment = await Establishment.create(newEstablishment);
       debug(chalk.greenBright("Establishment added to database"));
 
-      res.status(200).json({ newEstablishment: createdEstablishment });
+      res.status(200).json({ createdEstablishment });
     } catch (error) {
       error.statusCode = 400;
       debug(chalk.red("Bad request"));

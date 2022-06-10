@@ -5,6 +5,7 @@ const {
   getEstablishments,
   deleteEstablishmentById,
   getEstablishmentById,
+  createEstablishment,
 } = require("./establishmentControllers");
 
 const res = {
@@ -227,6 +228,125 @@ describe("Given getEstablishmentById middleware", () => {
       await getEstablishmentById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given createEstablishment middleware", () => {
+  describe("When it receives a request with a correct establishment and correct user rol", () => {
+    test("Then it should call it's response json status with 200 and json with the expected object", async () => {
+      const mockCreatedEstablishment = {
+        establishmentType: [
+          {
+            code: "RES",
+            description: "Restaurante",
+          },
+        ],
+        name: "La Canyà Menjars",
+        establishmentOffer: [
+          {
+            code: "DELIVERY",
+            description: "A domicilio",
+          },
+        ],
+        adress: "pza puerta, 8",
+        municipality: "La Canyada",
+        region: "Valencia",
+        picture: "images/10-6-2022-16-35-smoliv.jpeg",
+        pictureBackup: "imageFirebase.jpeg",
+      };
+      const req = {
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        newImageName: "10-6-2022-16-35-smoliv.jpeg",
+        firebaseFileURL: "imageFirebase.jpeg",
+        body: {
+          establishmentType: "RES",
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+          adress: "pza puerta, 8",
+          municipality: "La Canyada",
+          region: "Valencia",
+        },
+        file: true,
+      };
+      const expectedResponse = {
+        createdEstablishment: {
+          establishmentType: [
+            {
+              code: "RES",
+              description: "Restaurante",
+            },
+          ],
+          name: "La Canyà Menjars",
+          establishmentOffer: [
+            {
+              code: "DELIVERY",
+              description: "A domicilio",
+            },
+          ],
+          adress: "pza puerta, 8",
+          municipality: "La Canyada",
+          region: "Valencia",
+          picture: "images/10-6-2022-16-35-smoliv.jpeg",
+          pictureBackup: "imageFirebase.jpeg",
+        },
+      };
+
+      Establishment.create = jest
+        .fn()
+        .mockResolvedValue(mockCreatedEstablishment);
+      await createEstablishment(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it receives a bad request and correct user rol", () => {
+    test("Then it should call it's response json status with 400 and json with  error message 'Bad request'", async () => {
+      const req = {
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        body: {
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+        },
+        file: false,
+      };
+      const expectErrorMessage = new Error("Bad request");
+
+      Establishment.create = jest.fn().mockResolvedValue(false);
+      await createEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+
+  describe("When it receives a request with no param id", () => {
+    test("Then it should call it's response with  error message 'Only administrators can delete an establishment'", async () => {
+      const req = {
+        user: {
+          username: "pepitan't",
+          userRol: rolUser,
+        },
+        body: {
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+        },
+        file: false,
+      };
+      const expectErrorMessage = new Error(
+        "Only administrators can create an establishment"
+      );
+
+      await createEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
     });
   });
 });

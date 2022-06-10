@@ -57,7 +57,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request { limit: 2, page: 1}", () => {
     test("Then it should call it's response json method with the establishmentsDataPage1", async () => {
       const reqPage1 = {
-        params: { limit: 2, page: 1 },
+        query: { limit: 2, page: 1 },
       };
 
       const establishmentsDataPage1 = {
@@ -81,7 +81,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request { limit: 2, page: 2}", () => {
     test("Then it should call it's response json method with the establishmentsDataPage2", async () => {
       const reqPage1 = {
-        params: { limit: 2, page: 2 },
+        query: { limit: 2, page: 2 },
       };
 
       const establishmentsDataPage2 = {
@@ -105,7 +105,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request with no params", () => {
     test("Then it should call it's response json method with the establishmentsData", async () => {
       const req = {
-        params: { limit: null, page: null },
+        query: { limit: null, page: null },
       };
 
       const establishmentsData = {
@@ -126,7 +126,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request but has an error on finding", () => {
     test("Then it should call it's next method with an error", async () => {
       const req = {
-        params: { limit: 10, page: 2 },
+        query: { limit: 10, page: 2 },
       };
 
       const error = new Error("Couldn't load establishments");
@@ -153,7 +153,7 @@ describe("Given deleteEstablishmentById middleware", () => {
         msg: "The establishment has been deleted",
       };
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(true);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(true);
       await deleteEstablishmentById(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -172,7 +172,7 @@ describe("Given deleteEstablishmentById middleware", () => {
       };
       const expectErrorMessage = new Error("Bad request");
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(false);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(false);
       await deleteEstablishmentById(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
@@ -192,7 +192,7 @@ describe("Given deleteEstablishmentById middleware", () => {
         "Only administrators can delete an establishment"
       );
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(false);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(false);
       await deleteEstablishmentById(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
@@ -208,7 +208,7 @@ describe("Given getEstablishmentById middleware", () => {
       };
       const expectedResponse = mockEstablishment;
 
-      Establishment.findOne = jest.fn().mockResolvedValue(mockEstablishment);
+      Establishment.findById = jest.fn().mockResolvedValue(mockEstablishment);
       await getEstablishmentById(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -223,7 +223,7 @@ describe("Given getEstablishmentById middleware", () => {
       };
       const expectedError = new Error("Bad request");
 
-      Establishment.findOne = jest.fn().mockRejectedValue(expectedError);
+      Establishment.findById = jest.fn().mockRejectedValue(expectedError);
       await getEstablishmentById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);

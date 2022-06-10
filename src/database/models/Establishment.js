@@ -57,6 +57,9 @@ const EstablishmentSchema = new Schema({
   picture: {
     type: String,
   },
+  pictureBackup: {
+    type: String,
+  },
 });
 
 const Establishment = model(

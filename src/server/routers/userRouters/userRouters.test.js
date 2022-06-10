@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
@@ -13,7 +14,6 @@ const {
   mockToken,
 } = require("../../mocks/mocksUsers");
 const { rolUser } = require("../../../database/utils/userRols");
-const UserRol = require("../../../database/models/UserRol");
 
 let mongoServer;
 
@@ -86,8 +86,16 @@ describe("Given a POST 'user/register' endpoint", () => {
 describe("Given a POST user/login endpoint", () => {
   describe("When it receives a request with a registered user", () => {
     test("Then it should respond with a 200 status and a token", async () => {
-      UserRol.findOne = jest.fn().mockResolvedValue("USR");
+      const mockLoginUser = {
+        username: "johndoe",
+        password: "johndoe",
+        userRol: { code: "USR" },
+      };
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(mockLoginUser),
+      }));
       jwt.sign = jest.fn().mockReturnValue(mockToken);
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
 
       const { body } = await request(app)
         .post("/user/login")

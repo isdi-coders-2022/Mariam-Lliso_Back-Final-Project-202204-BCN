@@ -24,6 +24,7 @@ const app = express();
 
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
+app.use(express.static("uploads"));
 app.use(express.json());
 app.use(helmet());
 

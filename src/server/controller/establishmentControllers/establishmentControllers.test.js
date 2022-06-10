@@ -5,6 +5,7 @@ const {
   getEstablishments,
   deleteEstablishmentById,
   getEstablishmentById,
+  createEstablishment,
 } = require("./establishmentControllers");
 
 const res = {
@@ -57,7 +58,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request { limit: 2, page: 1}", () => {
     test("Then it should call it's response json method with the establishmentsDataPage1", async () => {
       const reqPage1 = {
-        params: { limit: 2, page: 1 },
+        query: { limit: 2, page: 1 },
       };
 
       const establishmentsDataPage1 = {
@@ -81,7 +82,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request { limit: 2, page: 2}", () => {
     test("Then it should call it's response json method with the establishmentsDataPage2", async () => {
       const reqPage1 = {
-        params: { limit: 2, page: 2 },
+        query: { limit: 2, page: 2 },
       };
 
       const establishmentsDataPage2 = {
@@ -105,7 +106,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request with no params", () => {
     test("Then it should call it's response json method with the establishmentsData", async () => {
       const req = {
-        params: { limit: null, page: null },
+        query: { limit: null, page: null },
       };
 
       const establishmentsData = {
@@ -126,7 +127,7 @@ describe("Given getEstablishments middleware", () => {
   describe("When it receives a request but has an error on finding", () => {
     test("Then it should call it's next method with an error", async () => {
       const req = {
-        params: { limit: 10, page: 2 },
+        query: { limit: 10, page: 2 },
       };
 
       const error = new Error("Couldn't load establishments");
@@ -153,7 +154,7 @@ describe("Given deleteEstablishmentById middleware", () => {
         msg: "The establishment has been deleted",
       };
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(true);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(true);
       await deleteEstablishmentById(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -172,7 +173,7 @@ describe("Given deleteEstablishmentById middleware", () => {
       };
       const expectErrorMessage = new Error("Bad request");
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(false);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(false);
       await deleteEstablishmentById(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
@@ -192,7 +193,7 @@ describe("Given deleteEstablishmentById middleware", () => {
         "Only administrators can delete an establishment"
       );
 
-      Establishment.findOneAndDelete = jest.fn().mockResolvedValue(false);
+      Establishment.findByIdAndDelete = jest.fn().mockResolvedValue(false);
       await deleteEstablishmentById(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
@@ -208,7 +209,7 @@ describe("Given getEstablishmentById middleware", () => {
       };
       const expectedResponse = mockEstablishment;
 
-      Establishment.findOne = jest.fn().mockResolvedValue(mockEstablishment);
+      Establishment.findById = jest.fn().mockResolvedValue(mockEstablishment);
       await getEstablishmentById(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -223,10 +224,129 @@ describe("Given getEstablishmentById middleware", () => {
       };
       const expectedError = new Error("Bad request");
 
-      Establishment.findOne = jest.fn().mockRejectedValue(expectedError);
+      Establishment.findById = jest.fn().mockRejectedValue(expectedError);
       await getEstablishmentById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given createEstablishment middleware", () => {
+  describe("When it receives a request with a correct establishment and correct user rol", () => {
+    test("Then it should call it's response json status with 200 and json with the expected object", async () => {
+      const mockCreatedEstablishment = {
+        establishmentType: [
+          {
+            code: "RES",
+            description: "Restaurante",
+          },
+        ],
+        name: "La Canyà Menjars",
+        establishmentOffer: [
+          {
+            code: "DELIVERY",
+            description: "A domicilio",
+          },
+        ],
+        adress: "pza puerta, 8",
+        municipality: "La Canyada",
+        region: "Valencia",
+        picture: "images/10-6-2022-16-35-smoliv.jpeg",
+        pictureBackup: "imageFirebase.jpeg",
+      };
+      const req = {
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        newImageName: "10-6-2022-16-35-smoliv.jpeg",
+        firebaseFileURL: "imageFirebase.jpeg",
+        body: {
+          establishmentType: "RES",
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+          adress: "pza puerta, 8",
+          municipality: "La Canyada",
+          region: "Valencia",
+        },
+        file: true,
+      };
+      const expectedResponse = {
+        createdEstablishment: {
+          establishmentType: [
+            {
+              code: "RES",
+              description: "Restaurante",
+            },
+          ],
+          name: "La Canyà Menjars",
+          establishmentOffer: [
+            {
+              code: "DELIVERY",
+              description: "A domicilio",
+            },
+          ],
+          adress: "pza puerta, 8",
+          municipality: "La Canyada",
+          region: "Valencia",
+          picture: "images/10-6-2022-16-35-smoliv.jpeg",
+          pictureBackup: "imageFirebase.jpeg",
+        },
+      };
+
+      Establishment.create = jest
+        .fn()
+        .mockResolvedValue(mockCreatedEstablishment);
+      await createEstablishment(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it receives a bad request and correct user rol", () => {
+    test("Then it should call it's response json status with 400 and json with  error message 'Bad request'", async () => {
+      const req = {
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        body: {
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+        },
+        file: false,
+      };
+      const expectErrorMessage = new Error("Bad request");
+
+      Establishment.create = jest.fn().mockResolvedValue(false);
+      await createEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+
+  describe("When it receives a request with no param id", () => {
+    test("Then it should call it's response with  error message 'Only administrators can delete an establishment'", async () => {
+      const req = {
+        user: {
+          username: "pepitan't",
+          userRol: rolUser,
+        },
+        body: {
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+        },
+        file: false,
+      };
+      const expectErrorMessage = new Error(
+        "Only administrators can create an establishment"
+      );
+
+      await createEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
     });
   });
 });

@@ -7,12 +7,11 @@ const UserRol = require("../../../database/models/UserRol");
 
 const userRegister = async (req, res, next) => {
   try {
-    const { name, surnames, username, password, userRol = "USR" } = req.body;
+    const { name, surnames, username, password, userRol } = req.body;
     const queryFindUser = { username };
     const user = await User.findOne(queryFindUser);
 
-    const queryFindUserRol = { userRol };
-    const userRolId = await UserRol.findOne(queryFindUserRol);
+    const userRolId = await UserRol.findOne({ code: userRol });
 
     if (user) {
       const customError = new Error("User already exists");
@@ -49,8 +48,7 @@ const userLogin = async (req, res, next) => {
   const { username, password } = req.body;
 
   const query = { username };
-  const user = await User.findOne(query);
-  const userRol = await UserRol.findOne(user.userRol);
+  const user = await User.findOne(query).populate("userRol");
 
   if (!user) {
     debug(chalk.red("Username not found"));
@@ -65,7 +63,7 @@ const userLogin = async (req, res, next) => {
   const userData = {
     id: user.id,
     username: user.username,
-    userRol: userRol.code,
+    userRol: user.userRol.code,
   };
 
   const isPasswordCorrect = await bcrypt.compare(password, user.password);

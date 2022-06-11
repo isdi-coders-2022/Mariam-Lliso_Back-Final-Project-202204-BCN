@@ -53,7 +53,7 @@ const getEstablishments = async (req, res, next) => {
   } catch {
     debug(chalk.green("Couldn't load establishments"));
     const error = new Error("Couldn't load establishments");
-    error.code = 404;
+    error.statusCode = 404;
     next(error);
   }
 };

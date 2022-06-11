@@ -53,7 +53,7 @@ const userLogin = async (req, res, next) => {
   if (!user) {
     debug(chalk.red("Username not found"));
     const error = new Error("Username or password are worng");
-    error.code = 403;
+    error.statusCode = 403;
 
     next(error);
 
@@ -71,7 +71,7 @@ const userLogin = async (req, res, next) => {
   if (!isPasswordCorrect) {
     debug(chalk.red("Received a wrong password"));
     const error = new Error("Username or password are worng");
-    error.code = 403;
+    error.statusCode = 403;
 
     next(error);
   } else {

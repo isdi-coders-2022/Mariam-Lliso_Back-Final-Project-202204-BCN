@@ -7,9 +7,7 @@ const getActualDateAndTime = () => {
   const hours = actualDate.getHours();
   const minutes = actualDate.getMinutes();
 
-  const dateFormatString = `${day}-${month}-${year}-${hours}-${minutes}`;
-
-  return dateFormatString;
+  return `${day}-${month}-${year}-${hours}-${minutes}`;
 };
 
 module.exports = {

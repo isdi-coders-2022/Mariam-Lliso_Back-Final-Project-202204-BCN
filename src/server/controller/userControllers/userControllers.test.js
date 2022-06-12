@@ -202,7 +202,7 @@ describe("Given getUserProfile function", () => {
 
       const expectedStatus = 200;
 
-      User.findOne = jest.fn(() => ({
+      User.findById = jest.fn(() => ({
         populate: jest.fn().mockReturnValue(mockUserWithId),
       }));
 
@@ -226,7 +226,7 @@ describe("Given getUserProfile function", () => {
 
       const expectedError = new Error("Bad request");
 
-      User.findOne = jest.fn(() => ({
+      User.findById = jest.fn(() => ({
         populate: jest.fn().mockReturnValue(false),
       }));
 

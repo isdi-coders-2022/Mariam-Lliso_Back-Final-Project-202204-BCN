@@ -84,7 +84,7 @@ const userLogin = async (req, res, next) => {
 const getUserProfile = async (req, res, next) => {
   const { id } = req.user;
   try {
-    const user = await User.findOne({ id }).populate("userRol");
+    const user = await User.findById({ _id: id }).populate("userRol");
 
     const userProfileData = {
       name: user.name,

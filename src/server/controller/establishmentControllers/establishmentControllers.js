@@ -41,7 +41,7 @@ const getEstablishments = async (req, res, next) => {
     }
 
     const establishmentsData = {
-      totalEstablishments: establishments.length,
+      totalEstablishments: total,
       currentPage: page,
       nextPage,
       previousPage,

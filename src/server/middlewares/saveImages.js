@@ -66,9 +66,6 @@ const saveImages = async (req, res, next) => {
         );
       }
     );
-    if (firebaseFileURL) {
-      next();
-    }
   } else {
     next();
   }

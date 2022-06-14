@@ -103,9 +103,8 @@ const deleteEstablishmentById = async (req, res, next) => {
 
 const createEstablishment = async (req, res, next) => {
   const { username, userRol } = req.user;
-  const { newImageName, firebaseFileURL } = req;
+  const { file, newImageName, firebaseFileURL } = req;
   const establishment = req.body;
-  const { file } = req;
 
   if (userRol === rolAdmin) {
     const establishmentType = establishmentTypes.find(
@@ -149,9 +148,63 @@ const createEstablishment = async (req, res, next) => {
   }
 };
 
+const editEstablishment = async (req, res, next) => {
+  const { username, userRol } = req.user;
+  const { file, newImageName, firebaseFileURL } = req;
+  const establishment = req.body;
+  const { idEstablishment } = req.params;
+
+  if (userRol === rolAdmin) {
+    const establishmentType = establishmentTypes.find(
+      (type) => type.code === establishment.establishmentType
+    );
+
+    let newEstablishment = {
+      ...establishment,
+      establishmentType,
+      picture: file ? path.join("images", newImageName) : establishment.picture,
+      pictureBackup: file ? firebaseFileURL : establishment.pictureBackup,
+    };
+
+    if (establishment.establishmentOffer) {
+      const establishmentOffer = establishmentOffers.find(
+        (offer) => offer.code === establishment.establishmentOffer
+      );
+
+      newEstablishment = {
+        ...newEstablishment,
+        establishmentOffer,
+      };
+    }
+
+    try {
+      const editedEstablishment = await Establishment.findByIdAndUpdate(
+        { _id: idEstablishment },
+        newEstablishment,
+        { new: true }
+      );
+
+      debug(chalk.greenBright("Establishment added to database"));
+
+      res.status(200).json({ editedEstablishment });
+    } catch (error) {
+      error.statusCode = 400;
+      debug(chalk.red("Bad request"));
+      error.message = "Bad request";
+      next(error);
+    }
+  } else {
+    const error = new Error("Only administrators can edit an establishment");
+    error.statusCode = 401;
+    debug(chalk.red(`${username} attempt to edit an establishment`));
+    next(error);
+  }
+};
+
 module.exports = {
   getEstablishments,
   deleteEstablishmentById,
   getEstablishmentById,
   createEstablishment,
+  editEstablishment,
 };

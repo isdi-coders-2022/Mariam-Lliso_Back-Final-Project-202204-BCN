@@ -1,3 +1,4 @@
+const path = require("path");
 const Establishment = require("../../../database/models/Establishment");
 const { rolAdmin, rolUser } = require("../../../database/utils/userRols");
 const { mockEstablishment } = require("../../mocks/mockEstablishments");
@@ -6,6 +7,7 @@ const {
   deleteEstablishmentById,
   getEstablishmentById,
   createEstablishment,
+  editEstablishment,
 } = require("./establishmentControllers");
 
 const res = {
@@ -345,6 +347,99 @@ describe("Given createEstablishment middleware", () => {
       );
 
       await createEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+});
+
+describe("Given editEstablishment middleware", () => {
+  describe("When it receives a request with a establishment, establishmentId and correct user rol", () => {
+    test("Then it should call it's response json status with 200 and json with the expected object", async () => {
+      const mockEditedEstablishment = {
+        establishmentType: [
+          {
+            code: "RES",
+            description: "Restaurante",
+          },
+        ],
+        name: "La Canyà Menjars",
+        establishmentOffer: [
+          {
+            code: "DELIVERY",
+            description: "A domicilio",
+          },
+        ],
+        adress: "pza puerta, 8",
+        municipality: "La Canyada",
+        region: "Valencia",
+        picture: "images/10-6-2022-16-35-smoliv.jpeg",
+        pictureBackup: "imageFirebase.jpeg",
+      };
+      const req = {
+        params: { idEstablishment: 1234 },
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        body: mockEditedEstablishment,
+        file: true,
+      };
+      const expectedResponse = {
+        editedEstablishment: mockEditedEstablishment,
+      };
+
+      jest.spyOn(path, "join").mockResolvedValue("image");
+
+      Establishment.findByIdAndUpdate = jest
+        .fn()
+        .mockResolvedValue(mockEditedEstablishment);
+      await editEstablishment(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it receives a bad request and correct user rol", () => {
+    test("Then it should call it's response json status with 400 and json with  error message 'Bad request'", async () => {
+      const req = {
+        user: {
+          username: "pepita",
+          userRol: rolAdmin,
+        },
+        body: {},
+        params: {},
+        file: false,
+      };
+      const expectErrorMessage = new Error("Bad request");
+
+      Establishment.findByIdAndUpdate = jest.fn().mockResolvedValue(false);
+      await editEstablishment(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectErrorMessage);
+    });
+  });
+
+  describe("When it receives a request with no param id", () => {
+    test("Then it should call it's response with  error message 'Only administrators can delete an establishment'", async () => {
+      const req = {
+        params: {},
+        user: {
+          username: "pepitan't",
+          userRol: rolUser,
+        },
+        body: {
+          name: "La Canyà Menjars",
+          establishmentOffer: "DELIVERY",
+        },
+        file: false,
+      };
+      const expectErrorMessage = new Error(
+        "Only administrators can edit an establishment"
+      );
+
+      await editEstablishment(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectErrorMessage);
     });

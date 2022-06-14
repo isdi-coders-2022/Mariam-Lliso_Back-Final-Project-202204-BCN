@@ -6,6 +6,7 @@ const {
   deleteEstablishmentById,
   getEstablishmentById,
   createEstablishment,
+  editEstablishment,
 } = require("../../controller/establishmentControllers/establishmentControllers");
 const auth = require("../../middlewares/auth");
 const saveImages = require("../../middlewares/saveImages");
@@ -28,6 +29,13 @@ establishmentRouter.post(
   uploadRecord.single("image"),
   saveImages,
   createEstablishment
+);
+establishmentRouter.put(
+  "/:idEstablishment",
+  auth,
+  uploadRecord.single("image"),
+  saveImages,
+  editEstablishment
 );
 
 module.exports = establishmentRouter;

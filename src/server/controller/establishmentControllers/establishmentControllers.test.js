@@ -64,7 +64,7 @@ describe("Given getEstablishments middleware", () => {
       };
 
       const establishmentsDataPage1 = {
-        totalEstablishments: 2,
+        totalEstablishments: 4,
         currentPage: 1,
         nextPage: {
           limit: 2,
@@ -88,7 +88,7 @@ describe("Given getEstablishments middleware", () => {
       };
 
       const establishmentsDataPage2 = {
-        totalEstablishments: 2,
+        totalEstablishments: 4,
         currentPage: 2,
         nextPage: null,
         previousPage: {
@@ -112,7 +112,7 @@ describe("Given getEstablishments middleware", () => {
       };
 
       const establishmentsData = {
-        totalEstablishments: 2,
+        totalEstablishments: 4,
         currentPage: 1,
         nextPage: null,
         previousPage: null,
